@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            
             this.choose_drive = new System.Windows.Forms.Button();
             this.labelCurrentDrive = new System.Windows.Forms.Label();
             this.DragDropPictureBox = new System.Windows.Forms.PictureBox();
@@ -56,12 +55,16 @@
             // 
             // DragDropPictureBox
             // 
-            this.DragDropPictureBox.Location = new System.Drawing.Point(141, 72);
+            this.DragDropPictureBox.BackColor = System.Drawing.Color.White;
+            this.DragDropPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.DragDropPictureBox.Location = new System.Drawing.Point(12, 31);
             this.DragDropPictureBox.Name = "DragDropPictureBox";
-            this.DragDropPictureBox.Size = new System.Drawing.Size(375, 312);
+            this.DragDropPictureBox.Size = new System.Drawing.Size(641, 407);
             this.DragDropPictureBox.TabIndex = 2;
             this.DragDropPictureBox.TabStop = false;
             this.DragDropPictureBox.Click += new System.EventHandler(this.DragDropPictureBox_Click);
+            this.DragDropPictureBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragDrop);
+            this.DragDropPictureBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.DragEnter);
             // 
             // Form1
             // 
@@ -73,6 +76,7 @@
             this.Controls.Add(this.choose_drive);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.DragDropPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

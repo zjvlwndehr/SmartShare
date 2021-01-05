@@ -21,17 +21,21 @@ namespace WindowsFormsApp1
         public string directory = "";
         public string jsonpath = "";
         public string container = "";
+        public Bitmap bitmap = new Bitmap("resource\\dragdrop.png");
         public Form1()
         {
             InitializeComponent();
-            //InitializeComponent2();
+            this.AllowDrop = true;
+            
+            DragDropPictureBox.Image = bitmap;
+            DragDropPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+
             checker();
             ReadJson();
         }
         // function : initialize  componets
         public void InitializeComponent2()
         {
-            
         }
 
 
@@ -135,15 +139,10 @@ namespace WindowsFormsApp1
         
         
 
-        // event : form1_load
-        private void Form1_Load(object sender, EventArgs e)
-        {
+       
 
-        }
 
-        // event : drag and drop
-
-        // event : click and select file
+        // event : Click;click and select file
         private void DragDropPictureBox_Click(object sender, EventArgs e)
         {
             OpenFileDialog file = new OpenFileDialog();
@@ -154,6 +153,34 @@ namespace WindowsFormsApp1
             if(filename != "")
             {
                 UploadFile(filename,destFileName);
+            }
+            else
+            {
+                Debug.WriteLine("status:400;no file selected");
+            }
+        }
+
+        // event : DargEnter;Make effect
+        private void DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Copy;
+        }
+
+        // event : form1_load
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            DragDropPictureBox.AllowDrop = true;
+        }
+
+        // event : DragDrop;Upload file
+        private void DragDrop(object sender, DragEventArgs e)
+        {
+            var filename = (string[])e.Data.GetData(DataFormats.FileDrop);
+            string destFileName = Path.GetFileName(filename[0]);
+            Debug.Print("status:200;drag and drop ok..., try UploadFile()...");
+            if (filename[0] != "")
+            {
+                UploadFile(filename[0], destFileName);
             }
             else
             {
