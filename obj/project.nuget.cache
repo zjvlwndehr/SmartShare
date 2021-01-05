@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "kLhJfpgLqCfSijle10MqbgCVIc/+O6o03rGGIlqI/aDZU+SDc2xENZExcqgarumJ441ARgnZ9SJDp3Wk0/dzJQ==",
+  "success": true,
+  "projectFilePath": "D:\\Development\\C_Project\\C#\\project\\SmartShare\\SmartShare02\\WindowsFormsApp1\\WindowsFormsApp1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ketch\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
