@@ -31,6 +31,7 @@
             this.choose_drive = new System.Windows.Forms.Button();
             this.labelCurrentDrive = new System.Windows.Forms.Label();
             this.DragDropPictureBox = new System.Windows.Forms.PictureBox();
+            this.FTP_Upload = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.DragDropPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -66,11 +67,22 @@
             this.DragDropPictureBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragDrop);
             this.DragDropPictureBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.DragEnter);
             // 
+            // FTP_Upload
+            // 
+            this.FTP_Upload.Location = new System.Drawing.Point(659, 277);
+            this.FTP_Upload.Name = "FTP_Upload";
+            this.FTP_Upload.Size = new System.Drawing.Size(128, 69);
+            this.FTP_Upload.TabIndex = 3;
+            this.FTP_Upload.Text = "FTP_Upload";
+            this.FTP_Upload.UseVisualStyleBackColor = true;
+            this.FTP_Upload.Click += new System.EventHandler(this.FTP_Upload_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.FTP_Upload);
             this.Controls.Add(this.DragDropPictureBox);
             this.Controls.Add(this.labelCurrentDrive);
             this.Controls.Add(this.choose_drive);
@@ -88,6 +100,7 @@
         private System.Windows.Forms.Button choose_drive;
         private System.Windows.Forms.Label labelCurrentDrive;
         private System.Windows.Forms.PictureBox DragDropPictureBox;
+        private System.Windows.Forms.Button FTP_Upload;
     }
 }
 

@@ -1,4 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿// ⓒ2021
+// email;ketchup2480@gmail.com
+// github_name;zjvlwndehr
+// github_repository;https://github.com/zjvlwndehr/SmartShare
+// 인천 대건고등학교 박태현
+// SmartShare™
+
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -13,6 +20,7 @@ using System.IO;
 using System.Web;
 using System.Diagnostics;
 using System.Resources;
+using System.Net;
 
 namespace WindowsFormsApp1
 {
@@ -25,19 +33,19 @@ namespace WindowsFormsApp1
         public Form1()
         {
             InitializeComponent();
-            this.AllowDrop = true;
-            
-            DragDropPictureBox.Image = bitmap;
-            DragDropPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
-
+            InitializeComponent2();
             checker();
             ReadJson();
+            
         }
+
         // function : initialize  componets
         public void InitializeComponent2()
         {
+            this.AllowDrop = true;
+            DragDropPictureBox.Image = bitmap;
+            DragDropPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
         }
-
 
         // function : check file exisitence
         public void checker()
@@ -131,16 +139,32 @@ namespace WindowsFormsApp1
         {
         }
 
-        // function : choose directory to use as a drive
+        // function : FTPupload : upload file in ftp web request
+        public void FTPupload()
+        {
+            FtpWebRequest FTPrequestUploader = (FtpWebRequest)WebRequest.Create("ftp://192.168.27:21/DataSenter/drive01/");
+            FTPrequestUploader.Credentials = new NetworkCredential("ID", "PW");
+            var request = FTPrequestUploader;
+            request.Method = WebRequestMethods.Ftp.MakeDirectory;
+            Debug.WriteLine("status:200;create ftp server : " + request.GetResponse());
+
+            try
+            {
+                using (var resp = (FtpWebResponse)request.GetResponse())
+                {
+                    Debug.WriteLine("status:200;response : " + resp);
+                    resp.Close();
+                }
+            }catch(WebException e)
+            {
+            }
+        }
+
+        // event : Click;choose directory to use as a drive
         private void choose_drive_Click(object sender, EventArgs e)
         {
             init();
         }
-        
-        
-
-       
-
 
         // event : Click;click and select file
         private void DragDropPictureBox_Click(object sender, EventArgs e)
@@ -186,6 +210,12 @@ namespace WindowsFormsApp1
             {
                 Debug.WriteLine("status:400;no file selected");
             }
+        }
+
+        // event : Click;Select accessable ipaddress and upload files via internet.
+        private void FTP_Upload_Click(object sender, EventArgs e)
+        {
+            FTPupload();
         }
     }
 }
