@@ -49,9 +49,9 @@
             this.labelCurrentDrive.AutoSize = true;
             this.labelCurrentDrive.Location = new System.Drawing.Point(13, 13);
             this.labelCurrentDrive.Name = "labelCurrentDrive";
-            this.labelCurrentDrive.Size = new System.Drawing.Size(39, 15);
+            this.labelCurrentDrive.Size = new System.Drawing.Size(87, 15);
             this.labelCurrentDrive.TabIndex = 1;
-            this.labelCurrentDrive.Text = "label1";
+            this.labelCurrentDrive.Text = "current drive:\\";
             // 
             // DragDropPictureBox
             // 
