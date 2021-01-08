@@ -143,7 +143,9 @@ namespace WindowsFormsApp1
         public void FTPupload()
         {
             FtpWebRequest FTPrequestUploader = (FtpWebRequest)WebRequest.Create("ftp://192.168.27:21/DataSenter/drive01/");
+            string ID =textBox1.Text; string PW = textBox2.Text;
             FTPrequestUploader.Credentials = new NetworkCredential("ID", "PW");
+            
             var request = FTPrequestUploader;
             request.Method = WebRequestMethods.Ftp.MakeDirectory;
             Debug.WriteLine("status:200;create ftp server : " + request.GetResponse());
