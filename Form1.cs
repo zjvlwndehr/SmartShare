@@ -5,6 +5,15 @@
 // 인천 대건고등학교 박태현
 // SmartShare™
 
+
+
+
+
+//  파일 업로드 도중 rsa체크를 표시하면...?
+
+
+
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -21,6 +30,8 @@ using System.Web;
 using System.Diagnostics;
 using System.Resources;
 using System.Net;
+using System.Security;
+using System.Security.Cryptography;
 
 namespace WindowsFormsApp1
 {
@@ -35,10 +46,9 @@ namespace WindowsFormsApp1
         private BackgroundWorker worker;
         public Form1()
         {
+            
             InitializeComponent();
-            InitializeComponent2();
-            //ReadJson();
-            Open_Directory.Visible = true; // = true; 애초에 ftp서버에 접속할 것이였으면 지금은 필요한지 모르겠음
+            InitializeComponent2();            
         }
 
         // function : initialize  componets
@@ -46,9 +56,12 @@ namespace WindowsFormsApp1
         {
             //인터넷 연결 확인하는것 추가하기. 맥주소에 따라서 서버인지 클라이언트인지 판단하여 이것을 적용하기. 서버면 ftp://localhost/ 로 인터넷 없이 접속가능
             checker();
-            init();
             Maintain_LogOn_checkBox.Checked = true;     //  Maintain LogOn
             Maintain_LogOn_checkBox.Text = "로그온 유지";
+            Always_On_Top_checkBox.Checked = false;
+            Always_On_Top_checkBox.Text = "AlwaysOnTop";
+            AES_Encryption_checkBox.Checked = true;     //  Default : true
+            AES_Encryption_checkBox.Text = "AES_Encryption";
             this.AllowDrop = true;      //  allow dargdrop event
             DragDropPictureBox.Image = bitmap;
             DragDropPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -86,74 +99,29 @@ namespace WindowsFormsApp1
             }
         }
 
-        // function : read last path from data.json
-        public void ReadJson()
+
+
+
+
+
+
+
+
+        // function : encrypt files in AES
+        public void AES_Encrypt()
         {
-            using (StreamReader sr = new StreamReader(jsonpath))
-            {
-                container = sr.ReadToEnd();  //  read all data.json text
-                Debug.WriteLine("status:100;\n"+container);
-
-                if (container != "")
-                {
-                    var json = JObject.Parse(container);    //  create json object and parse text
-                    string lastsession = (string)json["lastsession"]; //  extract last path   //  Debug.WriteLine(lastsession);
-                    Debug.WriteLine("status:100;lastsession = " + lastsession);
-
-                    if (lastsession != "")
-                    {
-                        CurrentSessionLabel.Text = lastsession;    //  return value
-                        session = lastsession;
-                    }
-                    else
-                    {
-                        init();
-                    }
-                }
-                else
-                {
-                    init();
-                }
-                sr.Close();
-            }
+            //  https://yyman.tistory.com/407
+            //  키를 유저 비번으로?
+            //  아니면 키를 파일 암호화 할 때 사용자 지정하고, 나중에 입력하는 방식?
+            //  byte리턴?
         }
 
-        // function : initialize values
-        public void init()
-        {
-            //string current_session = session;   //  copy past session
-            //labelCurrentDrive.Text = session;    // TextBox.Text is changed into new session path.
 
-            //var json = new JObject();
-            //json.Add("lastsession", session); Debug.WriteLine("sataus:200;json add data\n" + json.ToString());
-            //container = json.ToString();
-            //WriteJSON(jsonpath);
-        }
 
-        // function : write JSON file
-        public void WriteJSON(string FileName)
-        {
-            //using (StreamWriter file = File.CreateText(FileName))
-            //{
-            //    file.Write(this.container);
-            //    Debug.WriteLine("status:200;write container" + this.container); 
-            //    file.Close();
-            //}
-        }
 
-        // function : upload file 삭제할 예정
-        //public void UploadFile(string path, string destFileName)
-        //{
-        //    destFileName = this.session+"\\" + destFileName;
-        //    if(File.Exists(destFileName)==true)
-        //    {
-        //        MessageBox.Show("status:400;The file already exists!"); Debug.WriteLine("status:400;The file already exists: " + destFileName);
-        //    }else
-        //    {
-        //        File.Copy(path,destFileName);Debug.WriteLine("status:200;uploading complete : "+destFileName);
-        //    }
 
-        //}
+
+
 
         // structure : Family of FtpSetting members
         struct FtpSetting
@@ -220,7 +188,7 @@ namespace WindowsFormsApp1
             
         }
 
-        // function : get file list
+        // function : select file(cannot select multi files)
         public bool SelectFile()
         {
             OpenFileDialog ofd = new OpenFileDialog() { Multiselect = false, ValidateNames = true, Filter = "All files|*.*" };
@@ -244,15 +212,6 @@ namespace WindowsFormsApp1
         // function : FTPupload : upload file in ftp web request/async 비동기 처리됨
         public void FTPupload()
         {
-            //Debug.WriteLine("status:" + (ftp_checker == true ? "200" : "false") + ";validation :" + ftp_checker);
-            //if(DragDropChecker == true)
-            //{
-            //    worker.RunWorkerAsync();
-            //    DragDropChecker = false;
-            //}else if (SelectFile() == true)
-            //{
-            //    worker.RunWorkerAsync();
-            //}
             if(Upload_input_mode == 1)          //  1=ftp upload button
             {
                 if (SelectFile() == true)
@@ -273,7 +232,17 @@ namespace WindowsFormsApp1
         // event : Click;choose directory to use as a drive
         private void Open_Directory_Click(object sender, EventArgs e)
         {
-            //init();Debug.WriteLine("clicked!");
+            string IP = textBox1.Text.Substring(6);
+            //  The format of a form : ftp://id:pw@ip:port
+            string ftp_path = String.Format("ftp://{0}:{1}@{2}", textBox2.Text,textBox3.Text,IP);Debug.WriteLine("status:100;ftp_path = " + ftp_path);
+            try
+            {
+                Process.Start("explorer.exe",ftp_path);
+            }catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                MessageBox.Show(ex.Message);
+            }
         }
 
         // event : Click;click and select file
@@ -369,6 +338,18 @@ namespace WindowsFormsApp1
                 json.Add("Id", "");
                 json.Add("Pw", "");
                 File.WriteAllText(jsonpath, json.ToString()); Debug.WriteLine("status:200;lastsession saved");
+            }
+        }
+
+        private void Always_On_Top_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Always_On_Top_checkBox.Checked == true)
+            {
+                this.TopMost = true;
+            }
+            else
+            {
+                this.TopMost = false;
             }
         }
     }
